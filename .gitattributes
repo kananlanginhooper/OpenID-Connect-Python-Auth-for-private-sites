@@ -1,0 +1,2 @@
+# the files run inside Linux containers: keep LF even on a Windows checkout
+* text=auto eol=lf
