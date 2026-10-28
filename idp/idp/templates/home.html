@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block body %}
+<h1>{{ user.name or user.email }}</h1>
+<p class="sub">Signed in as {{ user.email }}</p>
+{% if sites %}<p class="muted">Sites that use this sign-in:</p>
+<ul>{% for s in sites %}<li>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+<a class="btn" href="{{ url_for('.logout') }}">Sign out</a>
+{% endblock %}
