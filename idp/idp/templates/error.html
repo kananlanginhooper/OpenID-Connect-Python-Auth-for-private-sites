@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block title %}Sign-in error{% endblock %}
+{% block body %}<h1>Can't sign in here</h1><p class="sub">The site sent a request this provider won't accept.</p>
+<p class="err"><b>{{ error }}</b>{% if description %}: {{ description }}{% endif %}</p>{% endblock %}

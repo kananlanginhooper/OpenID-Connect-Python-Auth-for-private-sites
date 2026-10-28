@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}<h1>{{ title }}</h1><p class="sub">{{ text }}</p><a class="btn" href="{{ url_for('.login') }}">Sign in again</a>{% endblock %}

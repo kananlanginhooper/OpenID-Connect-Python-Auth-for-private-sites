@@ -1,0 +1,11 @@
+[
+  {
+    "client_id": "demo-gate",
+    "name": "Demo private site",
+    "url": "${GATE_PUBLIC_URL}/",
+    "redirect_uris": ["${GATE_PUBLIC_URL}/redirect_uri"],
+    "post_logout_redirect_uris": ["${GATE_PUBLIC_URL}/"],
+    "auth_method": "client_secret_basic",
+    "secret_file": "/shared/demo-gate.secret"
+  }
+]

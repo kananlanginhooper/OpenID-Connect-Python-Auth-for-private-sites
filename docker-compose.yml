@@ -1,0 +1,51 @@
+# docker compose up -d   then add a user:  docker compose exec idp flask user add you@example.com
+# Everything restarts with Docker (restart: unless-stopped), so nothing has to be started by hand after a reboot.
+# Settings come from .env (copy .env.example); the defaults run on one machine at http://localhost.
+name: oidc-auth
+
+x-urls: &urls
+  IDP_ISSUER: ${IDP_PUBLIC_URL:-http://localhost:9000}
+  GATE_PUBLIC_URL: ${GATE_PUBLIC_URL:-http://localhost:9080}
+
+services:
+  idp:
+    build: ./idp
+    restart: unless-stopped
+    environment:
+      <<: *urls
+      IDP_CLIENTS_FILE: /config/clients.json
+      IDP_INTERNAL_URL: http://idp:9000
+      IDP_SESSION_HOURS: ${IDP_SESSION_HOURS:-12}
+    volumes:
+      - idp-data:/data
+      - shared:/shared
+      - ./config:/config:ro
+    ports:
+      - "${IDP_BIND:-0.0.0.0}:${IDP_PORT:-9000}:9000"
+
+  gate:
+    build: ./gate
+    restart: unless-stopped
+    depends_on:
+      idp: { condition: service_healthy }
+    environment:
+      <<: *urls
+      IDP_INTERNAL_URL: http://idp:9000
+      OIDC_CLIENT_ID: demo-gate
+      UPSTREAM: demo:80
+    volumes:
+      - shared:/shared:ro
+      - gate-data:/gate-data
+    ports:
+      - "${GATE_BIND:-0.0.0.0}:${GATE_PORT:-9080}:80"
+
+  # The private site in the demo: echoes the request, so you can see the signed-in user's headers.
+  demo:
+    image: traefik/whoami:v1.10.3
+    restart: unless-stopped
+    # no ports: reachable only through the gate
+
+volumes:
+  idp-data:
+  gate-data:
+  shared:
