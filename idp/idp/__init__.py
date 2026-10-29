@@ -6,12 +6,13 @@ Settings (environment):
   IDP_DATA_DIR      where the database, signing key and session secret live (default /data)
   DATABASE_URL      any SQLAlchemy URL (default sqlite:///<IDP_DATA_DIR>/idp.sqlite3)
   IDP_CLIENTS_FILE  JSON list of relying parties (see clients.py)
-  FRAME_ANCESTORS   origins allowed to show the login page in an iframe (unset: only this site)
+  FRAME_ANCESTORS   wrapper origins allowed to frame the login page (registered sites are always allowed)
   FORWARDED_ALLOW_IPS  reverse proxies whose X-Forwarded-* headers are trusted (comma-separated, or *)
 """
 import logging
 import os
 import secrets
+from urllib.parse import urlsplit
 
 from flask import Flask
 
@@ -67,9 +68,10 @@ def create_app():
         OAUTH2_TOKEN_EXPIRES_IN={"authorization_code": 3600},
     )
     _behind_proxy(app, os.environ.get("FORWARDED_ALLOW_IPS", ""))
-    # Apps sign in inside the wrapper's iframes, so the login page may be framed, but only by the configured origins.
-    ancestors = " ".join(os.environ.get("FRAME_ANCESTORS", "").replace(",", " ").split()) or "'self'"
-    app.after_request(lambda r: (r.headers.setdefault("Content-Security-Policy", f"frame-ancestors {ancestors}"), r)[1])
+    # Apps sign in inside their own iframe in the dashboard wrapper, so the login page may be framed by the wrapper
+    # (FRAME_ANCESTORS) and by every registered site (the origins of its redirect URIs, added after the client sync).
+    ancestors = ["'self'", *os.environ.get("FRAME_ANCESTORS", "").replace(",", " ").split()]
+    app.after_request(lambda r: (r.headers.setdefault("Content-Security-Policy", "frame-ancestors " + " ".join(ancestors)), r)[1])
     db.init_app(app)
     init_oauth(app)
 
@@ -81,7 +83,12 @@ def create_app():
     with app.app_context():
         db.create_all()
         sync_clients(os.environ.get("IDP_CLIENTS_FILE"), log)
-        from .models import User
+        from .models import Client, User
+        for c in Client.query.all():
+            for uri in c.redirect_uris:
+                u = urlsplit(uri)
+                if f"{u.scheme}://{u.netloc}" not in ancestors:
+                    ancestors.append(f"{u.scheme}://{u.netloc}")
         if User.query.count() == 0:
             log.warning("no users yet: add one with  docker compose exec idp flask user add you@example.com")
         db.engine.dispose()   # gunicorn --preload forks after this: workers open their own connections
