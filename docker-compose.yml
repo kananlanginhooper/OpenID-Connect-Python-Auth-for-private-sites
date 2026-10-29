@@ -1,6 +1,7 @@
 # docker compose up -d   then add a user:  docker compose exec idp flask user add you@example.com
 # Everything restarts with Docker (restart: unless-stopped), so nothing has to be started by hand after a reboot.
 # Settings come from .env (copy .env.example); the defaults run on one machine at http://localhost.
+# To join an existing shared Docker network instead of the stack's own, see compose.shared-network.yml.
 name: oidc-auth
 
 x-urls: &urls
@@ -15,7 +16,7 @@ services:
       <<: *urls
       # the committed demo client, plus your own sites in a gitignored file (see config/clients.example.json)
       IDP_CLIENTS_FILE: ${IDP_CLIENTS_FILE:-/config/clients.json /config/clients.local.json}
-      IDP_INTERNAL_URL: http://idp:9000
+      IDP_INTERNAL_URL: http://oidc-idp:9000
       IDP_SESSION_HOURS: ${IDP_SESSION_HOURS:-12}
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FORWARDED_ALLOW_IPS: ${FORWARDED_ALLOW_IPS:-}
@@ -31,6 +32,10 @@ services:
       - ./config:/config:ro
     ports:
       - "${IDP_BIND:-0.0.0.0}:${IDP_PORT:-9000}:9000"
+    networks:
+      default:
+        # a name unlikely to clash with other stacks when the network is shared
+        aliases: [oidc-idp]
 
   gate:
     build: ./gate
@@ -39,20 +44,28 @@ services:
       idp: { condition: service_healthy }
     environment:
       <<: *urls
-      IDP_INTERNAL_URL: http://idp:9000
+      IDP_INTERNAL_URL: http://oidc-idp:9000
       OIDC_CLIENT_ID: demo-gate
-      UPSTREAM: demo:80
+      UPSTREAM: oidc-demo:80
     volumes:
       - shared:/shared:ro
       - gate-data:/gate-data
     ports:
       - "${GATE_BIND:-0.0.0.0}:${GATE_PORT:-9080}:80"
+    networks: [default, private]
 
   # The private site in the demo: echoes the request, so you can see the signed-in user's headers.
   demo:
     image: traefik/whoami:v1.10.3
     restart: unless-stopped
-    # no ports: reachable only through the gate
+    # no ports, and only on the private network: reachable only through the gate
+    networks:
+      private:
+        aliases: [oidc-demo]
+
+networks:
+  private:
+    internal: true
 
 volumes:
   idp-data:

@@ -22,6 +22,8 @@ docker compose exec idp flask user add you@example.com --name "Your Name"
 
 Open http://localhost:9080/. You're sent to the sign-in page at http://localhost:9000, and after you sign in you land on the demo site. To sign out of both: http://localhost:9080/redirect_uri?logout=http%3A%2F%2Flocalhost%3A9080%2F
 
+The demo site sits on an internal network that only the gate joins. To run the idp and gate on an existing shared Docker network (for example, one whose subnet your database allows), turn on `compose.shared-network.yml` in `.env`; that file has the three lines to set. The provider then answers inside that network as `oidc-idp`, a name unlikely to clash with other stacks.
+
 All three services use `restart: unless-stopped`. Once Docker starts at boot, the stack is back without anyone starting it.
 
 ## Settings
