@@ -35,7 +35,7 @@ Copy `.env.example` to `.env`. Both public URLs must be exactly what browsers ty
 | `IDP_PUBLIC_URL` | `http://localhost:9000` | The provider's address, which is also the token issuer (`iss`) |
 | `GATE_PUBLIC_URL` | `http://localhost:9080` | The protected site's address |
 | `IDP_PORT` / `GATE_PORT` | `9000` / `9080` | Host ports |
-| `IDP_BIND` / `GATE_BIND` | `0.0.0.0` | Set `127.0.0.1` to keep a port off the network, e.g. behind your own TLS proxy |
+| `BIND_ADDR` | `127.0.0.1` | The one IPv4 address both ports are published on. Set the machine's LAN address to share them; avoid `0.0.0.0` on a host with a public IPv6 address |
 | `IDP_SESSION_HOURS` | `12` | How long a sign-in at the provider lasts |
 | `FRAME_ANCESTORS` | (none) | Extra origins allowed to show the sign-in page in an iframe, e.g. a dashboard that frames your apps. Every registered site's origin (from its redirect URIs) is always allowed, since its login runs inside its own frame |
 | `FORWARDED_ALLOW_IPS` | (none) | Reverse proxies whose `X-Forwarded-*` headers are trusted (comma-separated IPs, or `*`) |

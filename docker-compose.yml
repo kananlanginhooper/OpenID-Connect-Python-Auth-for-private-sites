@@ -31,7 +31,7 @@ services:
       - shared:/shared
       - ./config:/config:ro
     ports:
-      - "${IDP_BIND:-0.0.0.0}:${IDP_PORT:-9000}:9000"
+      - "${BIND_ADDR:-127.0.0.1}:${IDP_PORT:-9000}:9000"
     networks:
       default:
         # a name unlikely to clash with other stacks when the network is shared
@@ -51,7 +51,7 @@ services:
       - shared:/shared:ro
       - gate-data:/gate-data
     ports:
-      - "${GATE_BIND:-0.0.0.0}:${GATE_PORT:-9080}:80"
+      - "${BIND_ADDR:-127.0.0.1}:${GATE_PORT:-9080}:80"
     networks: [default, private]
 
   # The private site in the demo: echoes the request, so you can see the signed-in user's headers.
