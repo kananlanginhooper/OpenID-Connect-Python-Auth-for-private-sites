@@ -16,6 +16,8 @@ services:
       IDP_CLIENTS_FILE: /config/clients.json
       IDP_INTERNAL_URL: http://idp:9000
       IDP_SESSION_HOURS: ${IDP_SESSION_HOURS:-12}
+      FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
+      FORWARDED_ALLOW_IPS: ${FORWARDED_ALLOW_IPS:-}
     volumes:
       - idp-data:/data
       - shared:/shared

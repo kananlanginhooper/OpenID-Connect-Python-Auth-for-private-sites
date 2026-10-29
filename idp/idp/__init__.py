@@ -6,6 +6,8 @@ Settings (environment):
   IDP_DATA_DIR      where the database, signing key and session secret live (default /data)
   DATABASE_URL      any SQLAlchemy URL (default sqlite:///<IDP_DATA_DIR>/idp.sqlite3)
   IDP_CLIENTS_FILE  JSON list of relying parties (see clients.py)
+  FRAME_ANCESTORS   origins allowed to show the login page in an iframe (unset: only this site)
+  FORWARDED_ALLOW_IPS  reverse proxies whose X-Forwarded-* headers are trusted (comma-separated, or *)
 """
 import logging
 import os
@@ -28,6 +30,16 @@ def _session_secret(data_dir):
             f.write(secrets.token_hex(32))
     with open(path) as f:
         return f.read().strip()
+
+
+def _behind_proxy(app, trusted):
+    """Honor X-Forwarded-For/Proto/Host (TLS ending at a reverse proxy) only from the proxies in FORWARDED_ALLOW_IPS."""
+    from werkzeug.middleware.proxy_fix import ProxyFix
+    ips = {i.strip() for i in trusted.split(",") if i.strip()}
+    if not ips:
+        return
+    plain, fixed = app.wsgi_app, ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+    app.wsgi_app = lambda env, start: (fixed if "*" in ips or env.get("REMOTE_ADDR") in ips else plain)(env, start)
 
 
 def create_app():
@@ -54,6 +66,10 @@ def create_app():
         PERMANENT_SESSION_LIFETIME=int(os.environ.get("IDP_SESSION_HOURS", "12")) * 3600,
         OAUTH2_TOKEN_EXPIRES_IN={"authorization_code": 3600},
     )
+    _behind_proxy(app, os.environ.get("FORWARDED_ALLOW_IPS", ""))
+    # Apps sign in inside the wrapper's iframes, so the login page may be framed, but only by the configured origins.
+    ancestors = " ".join(os.environ.get("FRAME_ANCESTORS", "").replace(",", " ").split()) or "'self'"
+    app.after_request(lambda r: (r.headers.setdefault("Content-Security-Policy", f"frame-ancestors {ancestors}"), r)[1])
     db.init_app(app)
     init_oauth(app)
 

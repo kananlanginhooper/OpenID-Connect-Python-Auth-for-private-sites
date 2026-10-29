@@ -45,6 +45,11 @@ class AuthorizationCode(db.Model, OAuth2AuthorizationCodeMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"))
     user = db.relationship("User")
+    # auth_time is when the user signed in (it goes into the ID token), so a code's age is measured from issued_at
+    issued_at = db.Column(db.Integer, nullable=False, default=lambda: int(time.time()))
+
+    def is_expired(self):
+        return self.issued_at + 300 < time.time()
 
 
 class Token(db.Model, OAuth2TokenMixin):
