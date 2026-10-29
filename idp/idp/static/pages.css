@@ -1,0 +1,70 @@
+/* The sign-in pages, Material 3 style on the shared tokens (theme.css). */
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: var(--app-space-4);
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  padding: var(--app-space-6) var(--app-space-5);
+  background: var(--app-card);
+  border-radius: var(--app-radius-l);
+}
+
+h1 { margin: 0 0 var(--app-space-1); font: var(--app-text-xl); }
+p.sub { margin: 0 0 var(--app-space-5); color: var(--app-muted); }
+
+/* outlined text field: the label sits on the border, like mat-form-field appearance="outline" */
+.field { position: relative; margin-top: var(--app-space-4); }
+.field input {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--app-space-4);
+  border: 1px solid var(--app-outline);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--app-ink);
+  font: var(--app-text-md);
+  font-size: 15px;
+}
+.field input:hover { border-color: var(--app-ink); }
+.field input:focus { outline: none; border: 2px solid var(--app-accent); padding: 0 calc(var(--app-space-4) - 1px); }
+.field label {
+  position: absolute;
+  top: -8px;
+  left: calc(var(--app-space-3) - 2px);
+  padding: 0 4px;
+  background: var(--app-card);
+  color: var(--app-muted);
+  font: var(--app-text-xs);
+}
+.field input:focus + label { color: var(--app-accent); }
+
+/* filled button (mat-flat-button): a pill */
+button,
+.btn {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-top: var(--app-space-5);
+  border: 0;
+  border-radius: 20px;
+  background: var(--app-accent);
+  color: var(--app-on-accent);
+  font: var(--app-text-md);
+  font-weight: 600;
+  line-height: 40px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+button:hover, .btn:hover { filter: brightness(1.08); }
+button:focus-visible, .btn:focus-visible { outline: 2px solid var(--app-accent); outline-offset: 2px; }
+
+.err { margin: var(--app-space-3) 0 0; color: var(--app-bad); font: var(--app-text-sm); }
+.muted { color: var(--app-muted); font: var(--app-text-sm); }
+ul { padding-left: 18px; }
+a { color: var(--app-accent); }

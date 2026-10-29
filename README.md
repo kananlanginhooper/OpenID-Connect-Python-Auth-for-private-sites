@@ -75,6 +75,16 @@ A client in the same compose network can use `IDP_INTERNAL_URL/.well-known/openi
 
 Back up `idp-data`. Set `DATABASE_URL` (any SQLAlchemy URL) on the `idp` service to use another database instead of SQLite.
 
+## Development
+
+```bash
+cd idp && pip install -r requirements-dev.txt
+pytest          # in-process tests (Flask test client, SQLite in a temp dir)
+ruff check idp tests && ruff format --check idp tests
+```
+
+Notes on the code layout and before/after screenshots are in [docs/refactor/](docs/refactor/README.md).
+
 ## Not done yet
 
 - Passkeys / WebAuthn and TOTP second factor

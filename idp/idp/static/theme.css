@@ -1,0 +1,45 @@
+/* The shared dashboard theme's tokens as plain CSS (this provider has no Sass build). The values are the ones the
+   Angular theme (project-wrapper-dashboard-api-mcp: ui/src/styles/theme.scss, Material 3 azure) resolves to, so the
+   sign-in pages look like the apps they sign in to. Light and dark follow the system. */
+:root {
+  color-scheme: light dark;
+
+  --app-accent: light-dark(#2f6fdb, #5b93f0);
+  --app-on-accent: #ffffff;
+
+  --app-space-1: 4px;
+  --app-space-2: 8px;
+  --app-space-3: 12px;
+  --app-space-4: 16px;
+  --app-space-5: 24px;
+  --app-space-6: 32px;
+
+  --app-radius-s: 6px;
+  --app-radius-m: 10px;
+  --app-radius-l: 16px;
+
+  --app-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --app-text-xs: 400 11.5px/1.4 var(--app-font-family);
+  --app-text-sm: 400 13px/1.45 var(--app-font-family);
+  --app-text-md: 400 14px/1.5 var(--app-font-family);
+  --app-text-lg: 600 16px/1.4 var(--app-font-family);
+  --app-text-xl: 650 20px/1.3 var(--app-font-family);
+
+  --app-bg: light-dark(#ffffff, #0d0e11);
+  --app-card: light-dark(#f4f3f6, #1a1b1f);
+  --app-ink: light-dark(#1a1b1f, #e3e2e6);
+  --app-muted: light-dark(#44474e, #e0e2ec);
+  --app-line: light-dark(#c4c6d0, #44474e);
+  --app-outline: light-dark(#74777f, #8e9099);
+  --app-bad: light-dark(#ba1a1a, #ffb4ab);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--app-bg);
+  color: var(--app-ink);
+  font: var(--app-text-md);
+}
