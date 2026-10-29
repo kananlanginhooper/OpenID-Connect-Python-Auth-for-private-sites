@@ -1,10 +1,15 @@
 """The OpenID Connect provider: authorization-code flow with PKCE (S256, required), RS256 ID tokens, bearer userinfo."""
+
 import json
 import os
 import time
 
 from authlib.integrations.flask_oauth2 import AuthorizationServer, ResourceProtector
-from authlib.integrations.sqla_oauth2 import create_bearer_token_validator, create_query_client_func, create_save_token_func
+from authlib.integrations.sqla_oauth2 import (
+    create_bearer_token_validator,
+    create_query_client_func,
+    create_save_token_func,
+)
 from authlib.jose import JsonWebKey
 from authlib.oauth2.rfc6749 import grants
 from authlib.oauth2.rfc7636 import CodeChallenge
@@ -12,10 +17,11 @@ from authlib.oidc.core import UserInfo
 from authlib.oidc.core.grants import OpenIDCode as _OpenIDCode
 from flask import current_app, session
 
-from .models import AuthorizationCode, Client, Token, User, db
+from .models import AuthorizationCode, Client, Token, UsedNonce, User, db
 
 SCOPES = ["openid", "profile", "email"]
 ID_TOKEN_TTL = 3600
+NONCE_KEEP = 86400  # how long an exchanged code's nonce stays unusable
 
 server = AuthorizationServer()
 require_oauth = ResourceProtector()
@@ -49,7 +55,7 @@ def user_info(user, scope):
         info["preferred_username"] = user.email
     if "email" in scope:
         info["email"] = user.email
-        info["email_verified"] = True   # accounts are made by the admin, not self-registered
+        info["email_verified"] = True  # accounts are made by the admin, not self-registered
     return info
 
 
@@ -79,6 +85,9 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
             return item
 
     def delete_authorization_code(self, authorization_code):
+        if authorization_code.nonce:
+            UsedNonce.query.filter(UsedNonce.used_at < int(time.time()) - NONCE_KEEP).delete()
+            db.session.merge(UsedNonce(client_id=authorization_code.client_id, nonce=authorization_code.nonce))
         db.session.delete(authorization_code)
         db.session.commit()
 
@@ -89,16 +98,29 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
 
 class OpenIDCode(_OpenIDCode):
     def exists_nonce(self, nonce, request):
-        return AuthorizationCode.query.filter_by(client_id=request.payload.client_id, nonce=nonce).first() is not None
+        cid = request.payload.client_id
+        return (
+            AuthorizationCode.query.filter_by(client_id=cid, nonce=nonce).first() is not None
+            or db.session.get(UsedNonce, (cid, nonce)) is not None
+        )
 
     def get_jwt_config(self, grant, client):
-        return {"key": current_app.config["SIGNING_KEY"], "alg": "RS256", "iss": current_app.config["ISSUER"], "exp": ID_TOKEN_TTL}
+        return {
+            "key": current_app.config["SIGNING_KEY"],
+            "alg": "RS256",
+            "iss": current_app.config["ISSUER"],
+            "exp": ID_TOKEN_TTL,
+        }
 
     def generate_user_info(self, user, scope):
         return user_info(user, scope)
 
 
 def init_oauth(app):
-    server.init_app(app, query_client=create_query_client_func(db.session, Client), save_token=create_save_token_func(db.session, Token))
+    server.init_app(
+        app,
+        query_client=create_query_client_func(db.session, Client),
+        save_token=create_save_token_func(db.session, Token),
+    )
     server.register_grant(AuthorizationCodeGrant, [OpenIDCode(require_nonce=False), CodeChallenge(required=True)])
     require_oauth.register_token_validator(create_bearer_token_validator(db.session, Token)())

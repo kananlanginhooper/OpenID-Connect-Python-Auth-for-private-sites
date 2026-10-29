@@ -12,6 +12,7 @@ A browser app (Angular, no back-end secret) is a public client: "auth_method": "
 
 ${VARS} are filled from the environment, so the same file works on a laptop and on a server.
 """
+
 import json
 import os
 import secrets
@@ -45,7 +46,7 @@ def _secret(path):
 
 def sync_clients(path, log):
     entries = []
-    for p in (path or "").replace(",", " ").split():   # several files: e.g. the committed example + a private local list
+    for p in (path or "").replace(",", " ").split():  # several files: e.g. the committed example + a private local list
         if not os.path.exists(p):
             log.warning("no clients file at %r", p)
             continue
@@ -58,22 +59,26 @@ def sync_clients(path, log):
         raise ValueError(f"a client_id is listed twice: {sorted(i for i in set(ids) if ids.count(i) > 1)}")
     for e in entries:
         method = e.get("auth_method", "client_secret_basic")
-        c = Client.query.filter_by(client_id=e["client_id"]).first() or Client(client_id=e["client_id"], client_id_issued_at=int(time.time()))
+        c = Client.query.filter_by(client_id=e["client_id"]).first() or Client(
+            client_id=e["client_id"], client_id_issued_at=int(time.time())
+        )
         c.client_secret = "" if method == "none" else _secret(e["secret_file"])
-        c.set_client_metadata({
-            "client_name": e.get("name", e["client_id"]),
-            "client_uri": e.get("url", ""),
-            "redirect_uris": e["redirect_uris"],
-            "post_logout_redirect_uris": e.get("post_logout_redirect_uris", []),
-            "grant_types": ["authorization_code"],
-            "response_types": ["code"],
-            "scope": " ".join(e.get("scopes", ["openid", "profile", "email"])),
-            "token_endpoint_auth_method": method,
-        })
+        c.set_client_metadata(
+            {
+                "client_name": e.get("name", e["client_id"]),
+                "client_uri": e.get("url", ""),
+                "redirect_uris": e["redirect_uris"],
+                "post_logout_redirect_uris": e.get("post_logout_redirect_uris", []),
+                "grant_types": ["authorization_code"],
+                "response_types": ["code"],
+                "scope": " ".join(e.get("scopes", ["openid", "profile", "email"])),
+                "token_endpoint_auth_method": method,
+            }
+        )
         db.session.add(c)
     keep = {e["client_id"] for e in entries}
     for c in Client.query.all():
-        if c.client_id not in keep:   # the file is the source of truth: a client taken out of it can't sign in any more
+        if c.client_id not in keep:  # the file is the source of truth: a client taken out of it can't sign in any more
             db.session.delete(c)
     db.session.commit()
     log.info("clients: %s", ", ".join(e["client_id"] for e in entries))

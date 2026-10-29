@@ -1,4 +1,5 @@
 """Users, OAuth clients, authorization codes and tokens (SQLAlchemy; SQLite by default, any DATABASE_URL works)."""
+
 import time
 import uuid
 
@@ -50,6 +51,14 @@ class AuthorizationCode(db.Model, OAuth2AuthorizationCodeMixin):
 
     def is_expired(self):
         return self.issued_at + 300 < time.time()
+
+
+class UsedNonce(db.Model):
+    """Nonces of codes already exchanged, kept a day, so a sign-in request can't be replayed after its code is gone."""
+
+    client_id = db.Column(db.String(48), primary_key=True)
+    nonce = db.Column(db.String(255), primary_key=True)
+    used_at = db.Column(db.Integer, nullable=False, default=lambda: int(time.time()))
 
 
 class Token(db.Model, OAuth2TokenMixin):

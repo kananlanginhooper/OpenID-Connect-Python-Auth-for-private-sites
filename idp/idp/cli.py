@@ -1,4 +1,5 @@
 """Account admin:  docker compose exec idp flask user add|list|passwd|disable|enable|remove ..."""
+
 import sys
 
 import click

@@ -10,6 +10,7 @@ Settings (environment):
   FRAME_ANCESTORS   wrapper origins allowed to frame the login page (registered sites are always allowed)
   FORWARDED_ALLOW_IPS  reverse proxies whose X-Forwarded-* headers are trusted (comma-separated, or *)
 """
+
 import logging
 import os
 import secrets
@@ -41,15 +42,22 @@ def _database_url(data_dir):
         return os.environ["DATABASE_URL"]
     if os.environ.get("DB_HOST"):
         from sqlalchemy import URL
-        return URL.create("postgresql+psycopg", username=os.environ.get("DB_USER", "idp"),
-                          password=os.environ.get("DB_PASSWORD", ""), host=os.environ["DB_HOST"],
-                          port=int(os.environ.get("DB_PORT", "5432")), database=os.environ.get("DB_NAME", "idp"))
+
+        return URL.create(
+            "postgresql+psycopg",
+            username=os.environ.get("DB_USER", "idp"),
+            password=os.environ.get("DB_PASSWORD", ""),
+            host=os.environ["DB_HOST"],
+            port=int(os.environ.get("DB_PORT", "5432")),
+            database=os.environ.get("DB_NAME", "idp"),
+        )
     return f"sqlite:///{os.path.join(data_dir, 'idp.sqlite3')}"
 
 
 def _upgrade():
     """Columns added after a table was first created (create_all only makes missing tables)."""
     from sqlalchemy import inspect, text
+
     if "issued_at" not in {c["name"] for c in inspect(db.engine).get_columns("authorization_code")}:
         with db.engine.begin() as c:
             c.execute(text("ALTER TABLE authorization_code ADD COLUMN issued_at INTEGER NOT NULL DEFAULT 0"))
@@ -59,6 +67,7 @@ def _upgrade():
 def _behind_proxy(app, trusted):
     """Honor X-Forwarded-For/Proto/Host (TLS ending at a reverse proxy) only from the proxies in FORWARDED_ALLOW_IPS."""
     from werkzeug.middleware.proxy_fix import ProxyFix
+
     ips = {i.strip() for i in trusted.split(",") if i.strip()}
     if not ips:
         return
@@ -84,7 +93,7 @@ def create_app():
         SIGNING_KEY=load_signing_key(data_dir),
         SQLALCHEMY_DATABASE_URI=_database_url(data_dir),
         SQLALCHEMY_ENGINE_OPTIONS={"pool_pre_ping": True},
-        SESSION_COOKIE_NAME="idp_session",      # sites on the same host (other ports) share cookies, so the name must be ours
+        SESSION_COOKIE_NAME="idp_session",  # other ports on the same host share cookies: the name must be ours
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=issuer.startswith("https://"),
@@ -115,8 +124,10 @@ def create_app():
     init_oauth(app)
 
     from .routes import bp
+
     app.register_blueprint(bp)
     from .cli import register
+
     register(app)
 
     with app.app_context():
@@ -124,6 +135,7 @@ def create_app():
         _upgrade()
         sync_clients(os.environ.get("IDP_CLIENTS_FILE"), log)
         from .models import Client, User
+
         for c in Client.query.all():
             for uri in c.redirect_uris:
                 u = urlsplit(uri)
@@ -132,6 +144,6 @@ def create_app():
                     ancestors.append(f"{u.scheme}://{u.netloc}")
         if User.query.count() == 0:
             log.warning("no users yet: add one with  docker compose exec idp flask user add you@example.com")
-        db.engine.dispose()   # gunicorn --preload forks after this: workers open their own connections
+        db.engine.dispose()  # gunicorn --preload forks after this: workers open their own connections
     log.info("issuer %s", issuer)
     return app
