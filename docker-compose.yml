@@ -18,6 +18,12 @@ services:
       IDP_SESSION_HOURS: ${IDP_SESSION_HOURS:-12}
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
       FORWARDED_ALLOW_IPS: ${FORWARDED_ALLOW_IPS:-}
+      # Postgres (shared server database); with DB_HOST empty the provider keeps SQLite in its data volume
+      DB_HOST: ${DB_HOST:-}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-idp}
+      DB_USER: ${DB_USER:-idp}
+      DB_PASSWORD: ${DB_PASSWORD:-}
     volumes:
       - idp-data:/data
       - shared:/shared
