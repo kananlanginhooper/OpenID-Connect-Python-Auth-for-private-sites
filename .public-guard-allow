@@ -1,0 +1,3 @@
+# secret_file is the PATH where the provider writes a generated client secret (shared docker volume), never a secret value
+secret:assignment config/clients.json secret_file\x22: \x22/shared/[a-z0-9-]+\.secret\x22
+secret:assignment idp/idp/clients.py secret_file\x22: \x22/shared/[a-z0-9-]+\.secret\x22

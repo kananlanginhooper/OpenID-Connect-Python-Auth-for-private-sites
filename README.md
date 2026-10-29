@@ -35,6 +35,8 @@ Copy `.env.example` to `.env`. Both public URLs must be exactly what browsers ty
 | `IDP_PORT` / `GATE_PORT` | `9000` / `9080` | Host ports |
 | `IDP_BIND` / `GATE_BIND` | `0.0.0.0` | Set `127.0.0.1` to keep a port off the network, e.g. behind your own TLS proxy |
 | `IDP_SESSION_HOURS` | `12` | How long a sign-in at the provider lasts |
+| `FRAME_ANCESTORS` | (none) | Origins allowed to show the sign-in page in an iframe, e.g. a dashboard that frames your apps. Unset: `frame-ancestors 'self'` |
+| `FORWARDED_ALLOW_IPS` | (none) | Reverse proxies whose `X-Forwarded-*` headers are trusted (comma-separated IPs, or `*`) |
 
 Plain `http` is accepted so the demo runs anywhere; the provider logs a warning. Anywhere other than a closed LAN, put both behind TLS (`https://` URLs).
 
