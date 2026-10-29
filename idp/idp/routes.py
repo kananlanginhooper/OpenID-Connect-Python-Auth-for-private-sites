@@ -37,7 +37,7 @@ def safe_next(target):
     return target if target and target.startswith("/") and not target.startswith("//") else url_for(".home")
 
 
-@bp.get("/.well-known/openid-configuration")
+@bp.route("/.well-known/openid-configuration", methods=["GET", "OPTIONS"])
 def discovery():
     iss = current_app.config["ISSUER"]
     # ?internal=1: a relying party in the same docker network gets the server-to-server endpoints (token, userinfo,
@@ -61,7 +61,7 @@ def discovery():
     })
 
 
-@bp.get("/jwks")
+@bp.route("/jwks", methods=["GET", "OPTIONS"])
 def jwks():
     return jsonify(public_jwks())
 
@@ -111,14 +111,22 @@ def login():
                            site=client.client_name if client else None, email=request.form.get("email", "")), (401 if error else 200)
 
 
-@bp.route("/token", methods=["POST"])
+@bp.route("/token", methods=["POST", "OPTIONS"])
 def token():
+    if request.method == "OPTIONS":   # CORS preflight from a browser app; the headers are added in __init__
+        return "", 204
     return server.create_token_response()
 
 
-@bp.route("/userinfo", methods=["GET", "POST"])
-@require_oauth("openid")
+@bp.route("/userinfo", methods=["GET", "POST", "OPTIONS"])
 def userinfo():
+    if request.method == "OPTIONS":
+        return "", 204
+    return _userinfo()
+
+
+@require_oauth("openid")
+def _userinfo():
     return jsonify(user_info(current_token.user, current_token.scope))
 
 

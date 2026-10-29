@@ -55,6 +55,12 @@ Add `--password-stdin` (and `-T` after `exec`) to pipe a password in from a scri
 
 [`config/clients.json`](config/clients.json) lists the sites allowed to sign in. It's synced into the database at every start, and a site taken out of the file can no longer sign in. `${VARS}` are filled from the environment. For a confidential client, the provider makes a secret on first start and writes it to the `shared` volume (`secret_file`). The relying party reads it from there, so no secret is ever written into a config file.
 
+**Browser apps** (an Angular or other single-page app with no server-side secret) are **public clients**: `"auth_method": "none"` and no `secret_file`. PKCE, which is required for every client here, protects the code instead. The redirect URI is the app's own address (its public URL plus base path).
+- The provider answers CORS on discovery, `/jwks`, `/token` and `/userinfo` for registered origins only.
+- The sign-in page may be framed by registered origins, so an app shown in a dashboard iframe can sign in inside its frame.
+- See [`config/clients.example.json`](config/clients.example.json). Your real list goes in `config/clients.local.json`, which is gitignored because addresses differ per network. `IDP_CLIENTS_FILE` loads both files.
+- [`tests/public_client_e2e.py`](tests/public_client_e2e.py) checks the whole public-client flow.
+
 To protect another site, add an entry to `clients.json`. Then add a second `gate` service with its own `OIDC_CLIENT_ID`, `UPSTREAM`, `GATE_PUBLIC_URL` and port. Any other OpenID Connect client works too; point it at `IDP_PUBLIC_URL/.well-known/openid-configuration`.
 
 A client in the same compose network can use `IDP_INTERNAL_URL/.well-known/openid-configuration?internal=1`. That discovery document keeps the public issuer and sign-in page, but points the server-to-server endpoints (token, userinfo, jwks) at the internal address. A public URL like `localhost` isn't reachable from inside a container.

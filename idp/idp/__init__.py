@@ -15,13 +15,14 @@ import os
 import secrets
 from urllib.parse import urlsplit
 
-from flask import Flask
+from flask import Flask, request
 
 from .clients import sync_clients
 from .models import db
 from .oauth import init_oauth, load_signing_key
 
 log = logging.getLogger("idp")
+CORS_PATHS = {"/.well-known/openid-configuration", "/jwks", "/token", "/userinfo"}
 
 
 def _session_secret(data_dir):
@@ -94,7 +95,22 @@ def create_app():
     # Apps sign in inside their own iframe in the dashboard wrapper, so the login page may be framed by the wrapper
     # (FRAME_ANCESTORS) and by every registered site (the origins of its redirect URIs, added after the client sync).
     ancestors = ["'self'", *os.environ.get("FRAME_ANCESTORS", "").replace(",", " ").split()]
-    app.after_request(lambda r: (r.headers.setdefault("Content-Security-Policy", "frame-ancestors " + " ".join(ancestors)), r)[1])
+    # Browser apps (public clients) call discovery, jwks, token and userinfo with fetch(), so those answer CORS for
+    # registered sites only. The login page itself is a normal navigation and needs none.
+    client_origins = set()
+
+    @app.after_request
+    def headers(r):
+        r.headers.setdefault("Content-Security-Policy", "frame-ancestors " + " ".join(ancestors))
+        origin = request.headers.get("Origin")
+        if origin in client_origins and request.path in CORS_PATHS:
+            r.headers["Access-Control-Allow-Origin"] = origin
+            r.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+            r.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            r.headers["Access-Control-Max-Age"] = "600"
+            r.headers.add("Vary", "Origin")
+        return r
+
     db.init_app(app)
     init_oauth(app)
 
@@ -111,6 +127,7 @@ def create_app():
         for c in Client.query.all():
             for uri in c.redirect_uris:
                 u = urlsplit(uri)
+                client_origins.add(f"{u.scheme}://{u.netloc}")
                 if f"{u.scheme}://{u.netloc}" not in ancestors:
                     ancestors.append(f"{u.scheme}://{u.netloc}")
         if User.query.count() == 0:

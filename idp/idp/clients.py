@@ -1,4 +1,4 @@
-"""Relying parties come from a JSON file (IDP_CLIENTS_FILE), synced into the database at every start.
+"""Relying parties come from JSON files (IDP_CLIENTS_FILE, space-separated), synced into the database at every start.
 
 Each entry:
   {"client_id": "demo-gate", "name": "Demo site", "url": "${GATE_PUBLIC_URL}/",
@@ -6,6 +6,9 @@ Each entry:
    "post_logout_redirect_uris": ["${GATE_PUBLIC_URL}/"],
    "auth_method": "client_secret_basic",          # or "none" for a public (browser/mobile) client
    "secret_file": "/shared/demo-gate.secret"}     # made on first start; the relying party reads it from there
+
+A browser app (Angular, no back-end secret) is a public client: "auth_method": "none", no secret_file, and PKCE
+(always required here) protects the code. Its redirect URI is the app's PUBLIC_URL + UI_BASE_PATH.
 
 ${VARS} are filled from the environment, so the same file works on a laptop and on a server.
 """
@@ -41,11 +44,18 @@ def _secret(path):
 
 
 def sync_clients(path, log):
-    if not path or not os.path.exists(path):
-        log.warning("no clients file at %r: no site can sign in yet", path)
-        return
-    with open(path) as f:
-        entries = [{k: _expand(v) for k, v in e.items()} for e in json.load(f)]
+    entries = []
+    for p in (path or "").replace(",", " ").split():   # several files: e.g. the committed example + a private local list
+        if not os.path.exists(p):
+            log.warning("no clients file at %r", p)
+            continue
+        with open(p) as f:
+            entries += [{k: _expand(v) for k, v in e.items()} for e in json.load(f)]
+    if not entries:
+        log.warning("no clients configured: no site can sign in yet")
+    ids = [e["client_id"] for e in entries]
+    if len(ids) != len(set(ids)):
+        raise ValueError(f"a client_id is listed twice: {sorted(i for i in set(ids) if ids.count(i) > 1)}")
     for e in entries:
         method = e.get("auth_method", "client_secret_basic")
         c = Client.query.filter_by(client_id=e["client_id"]).first() or Client(client_id=e["client_id"], client_id_issued_at=int(time.time()))
