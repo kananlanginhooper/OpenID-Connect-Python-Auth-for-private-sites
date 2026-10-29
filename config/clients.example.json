@@ -1,0 +1,10 @@
+[
+  {
+    "client_id": "my-dashboard",
+    "name": "My dashboard",
+    "url": "http://localhost:4300/",
+    "redirect_uris": ["http://localhost:4300/", "https://dashboard.example.com/"],
+    "post_logout_redirect_uris": ["http://localhost:4300/", "https://dashboard.example.com/"],
+    "auth_method": "none"
+  }
+]

@@ -13,7 +13,8 @@ services:
     restart: unless-stopped
     environment:
       <<: *urls
-      IDP_CLIENTS_FILE: /config/clients.json
+      # the committed demo client, plus your own sites in a gitignored file (see config/clients.example.json)
+      IDP_CLIENTS_FILE: ${IDP_CLIENTS_FILE:-/config/clients.json /config/clients.local.json}
       IDP_INTERNAL_URL: http://idp:9000
       IDP_SESSION_HOURS: ${IDP_SESSION_HOURS:-12}
       FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}

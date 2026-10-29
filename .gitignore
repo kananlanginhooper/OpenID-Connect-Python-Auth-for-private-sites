@@ -221,3 +221,5 @@ __marimo__/
 
 # local test credentials (never committed)
 local/
+# your own sites (addresses differ per network)
+config/clients.local.json
