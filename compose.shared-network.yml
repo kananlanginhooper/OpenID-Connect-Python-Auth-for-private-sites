@@ -1,0 +1,10 @@
+# Optional: run the idp and gate on an existing shared Docker network (for example one whose subnet your database
+# allows) instead of the stack's own. Turn it on in .env:
+#   COMPOSE_FILE=docker-compose.yml:compose.shared-network.yml
+#   COMPOSE_PATH_SEPARATOR=:
+#   SHARED_NETWORK=homelab
+# The network must exist first, e.g. docker network create --subnet <subnet your database allows> homelab
+networks:
+  default:
+    name: ${SHARED_NETWORK:?set SHARED_NETWORK in .env}
+    external: true
