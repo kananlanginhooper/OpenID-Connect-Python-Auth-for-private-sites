@@ -2,13 +2,15 @@
 body {
   display: grid;
   place-items: center;
-  min-height: 100vh;
-  padding: var(--app-space-4);
+  min-height: 100dvh; /* the visible height, under a phone's browser bars */
+  padding: max(var(--app-space-4), env(safe-area-inset-top)) max(var(--app-space-4), env(safe-area-inset-right))
+    max(var(--app-space-4), env(safe-area-inset-bottom)) max(var(--app-space-4), env(safe-area-inset-left));
 }
 
 .card {
   width: 100%;
   max-width: 380px;
+  overflow-wrap: anywhere; /* long emails and site names wrap instead of widening the page */
   padding: var(--app-space-6) var(--app-space-5);
   background: var(--app-card);
   border-radius: var(--app-radius-l);
@@ -28,7 +30,7 @@ p.sub { margin: 0 0 var(--app-space-5); color: var(--app-muted); }
   background: transparent;
   color: var(--app-ink);
   font: var(--app-text-md);
-  font-size: 15px;
+  font-size: 16px; /* under 16px, iOS zooms the page on focus */
 }
 .field input:hover { border-color: var(--app-ink); }
 .field input:focus { outline: none; border: 2px solid var(--app-accent); padding: 0 calc(var(--app-space-4) - 1px); }
@@ -48,15 +50,15 @@ button,
 .btn {
   display: block;
   width: 100%;
-  height: 40px;
+  height: 44px; /* a full tap target */
   margin-top: var(--app-space-5);
   border: 0;
-  border-radius: 20px;
+  border-radius: 22px;
   background: var(--app-accent);
   color: var(--app-on-accent);
   font: var(--app-text-md);
   font-weight: 600;
-  line-height: 40px;
+  line-height: 44px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -67,4 +69,5 @@ button:focus-visible, .btn:focus-visible { outline: 2px solid var(--app-accent);
 .err { margin: var(--app-space-3) 0 0; color: var(--app-bad); font: var(--app-text-sm); }
 .muted { color: var(--app-muted); font: var(--app-text-sm); }
 ul { padding-left: 18px; }
+li a { display: inline-block; min-height: 44px; line-height: 44px; } /* site links are tap targets too */
 a { color: var(--app-accent); }
