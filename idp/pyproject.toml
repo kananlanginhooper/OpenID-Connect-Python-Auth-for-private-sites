@@ -1,3 +1,12 @@
+[project]
+name = "oidc-idp"
+version = "0.0.0"
+authors = [{ name = "Kanan Hooper" }]
+requires-python = ">=3.12"
+
+[project.urls]
+Author = "https://github.com/kananlanginhooper"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]

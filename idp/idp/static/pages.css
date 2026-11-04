@@ -2,6 +2,7 @@
 body {
   display: grid;
   place-items: center;
+  grid-template-rows: 1fr auto; /* the card centered, the credit line under it at the bottom */
   min-height: 100dvh; /* the visible height, under a phone's browser bars */
   padding: max(var(--app-space-4), env(safe-area-inset-top)) max(var(--app-space-4), env(safe-area-inset-right))
     max(var(--app-space-4), env(safe-area-inset-bottom)) max(var(--app-space-4), env(safe-area-inset-left));
@@ -71,3 +72,8 @@ button:focus-visible, .btn:focus-visible { outline: 2px solid var(--app-accent);
 ul { padding-left: 18px; }
 li a { display: inline-block; min-height: 44px; line-height: 44px; } /* site links are tap targets too */
 a { color: var(--app-accent); }
+
+/* the author credit (one muted line) */
+.credit { margin-top: var(--app-space-4); font: var(--app-text-xs); }
+.credit a { color: var(--app-muted); text-decoration: none; }
+.credit a:hover { text-decoration: underline; }

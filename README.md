@@ -96,4 +96,7 @@ Notes on the code layout and before/after screenshots are in [docs/refactor/](do
 
 ## License
 
-GPL-3.0, see [LICENSE](LICENSE).
+GPL-3.0, see [LICENSE](LICENSE). Copyright (c) 2026 Kanan Hooper.
+
+---
+Built by [Kanan Hooper](https://github.com/kananlanginhooper)
