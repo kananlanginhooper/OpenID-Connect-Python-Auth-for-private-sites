@@ -1,45 +1,406 @@
-/* The shared dashboard theme's tokens as plain CSS (this provider has no Sass build). The values are the ones the
-   Angular theme (project-wrapper-dashboard-api-mcp: ui/src/styles/theme.scss, Material 3 azure) resolves to, so the
-   sign-in pages look like the apps they sign in to. Light and dark follow the system. */
-:root {
+/* GENERATED from project-wrapper-dashboard-api-mcp ui/src/styles/theme.scss by `npm run theme-css`: don't edit,
+   copy it unchanged. The shared dashboard theme as plain CSS custom properties (--app-*, --mat-sys-*), light and dark
+   following the system. Angular apps use theme.scss instead. */
+html {
   color-scheme: light dark;
+  --mat-sys-background: light-dark(#faf9fd, #121316);
+  --mat-sys-error: light-dark(#ba1a1a, #ffb4ab);
+  --mat-sys-error-container: light-dark(#ffdad6, #93000a);
+  --mat-sys-inverse-on-surface: light-dark(#f2f0f4, #2f3033);
+  --mat-sys-inverse-primary: light-dark(#abc7ff, #005cbb);
+  --mat-sys-inverse-surface: light-dark(#2f3033, #e3e2e6);
+  --mat-sys-on-background: light-dark(#1a1b1f, #e3e2e6);
+  --mat-sys-on-error: light-dark(#ffffff, #690005);
+  --mat-sys-on-error-container: light-dark(#93000a, #ffdad6);
+  --mat-sys-on-primary: light-dark(#ffffff, #002f65);
+  --mat-sys-on-primary-container: light-dark(#00458f, #d7e3ff);
+  --mat-sys-on-primary-fixed: light-dark(#001b3f, #001b3f);
+  --mat-sys-on-primary-fixed-variant: light-dark(#00458f, #00458f);
+  --mat-sys-on-secondary: light-dark(#ffffff, #283041);
+  --mat-sys-on-secondary-container: light-dark(#3e4759, #dae2f9);
+  --mat-sys-on-secondary-fixed: light-dark(#131c2b, #131c2b);
+  --mat-sys-on-secondary-fixed-variant: light-dark(#3e4759, #3e4759);
+  --mat-sys-on-surface: light-dark(#1a1b1f, #e3e2e6);
+  --mat-sys-on-surface-variant: light-dark(#44474e, #e0e2ec);
+  --mat-sys-on-tertiary: light-dark(#ffffff, #0001ac);
+  --mat-sys-on-tertiary-container: light-dark(#0000ef, #e0e0ff);
+  --mat-sys-on-tertiary-fixed: light-dark(#00006e, #00006e);
+  --mat-sys-on-tertiary-fixed-variant: light-dark(#0000ef, #0000ef);
+  --mat-sys-outline: light-dark(#74777f, #8e9099);
+  --mat-sys-outline-variant: light-dark(#c4c6d0, #44474e);
+  --mat-sys-primary: light-dark(#005cbb, #abc7ff);
+  --mat-sys-primary-container: light-dark(#d7e3ff, #00458f);
+  --mat-sys-primary-fixed: light-dark(#d7e3ff, #d7e3ff);
+  --mat-sys-primary-fixed-dim: light-dark(#abc7ff, #abc7ff);
+  --mat-sys-scrim: light-dark(#000000, #000000);
+  --mat-sys-secondary: light-dark(#565e71, #bec6dc);
+  --mat-sys-secondary-container: light-dark(#dae2f9, #3e4759);
+  --mat-sys-secondary-fixed: light-dark(#dae2f9, #dae2f9);
+  --mat-sys-secondary-fixed-dim: light-dark(#bec6dc, #bec6dc);
+  --mat-sys-shadow: light-dark(#000000, #000000);
+  --mat-sys-surface: light-dark(#faf9fd, #121316);
+  --mat-sys-surface-bright: light-dark(#faf9fd, #38393c);
+  --mat-sys-surface-container: light-dark(#efedf0, #1f2022);
+  --mat-sys-surface-container-high: light-dark(#e9e7eb, #292a2c);
+  --mat-sys-surface-container-highest: light-dark(#e3e2e6, #343537);
+  --mat-sys-surface-container-low: light-dark(#f4f3f6, #1a1b1f);
+  --mat-sys-surface-container-lowest: light-dark(#ffffff, #0d0e11);
+  --mat-sys-surface-dim: light-dark(#dbd9dd, #121316);
+  --mat-sys-surface-tint: light-dark(#005cbb, #abc7ff);
+  --mat-sys-surface-variant: light-dark(#e0e2ec, #44474e);
+  --mat-sys-tertiary: light-dark(#343dff, #bec2ff);
+  --mat-sys-tertiary-container: light-dark(#e0e0ff, #0000ef);
+  --mat-sys-tertiary-fixed: light-dark(#e0e0ff, #e0e0ff);
+  --mat-sys-tertiary-fixed-dim: light-dark(#bec2ff, #bec2ff);
+  --mat-sys-neutral-variant20: #2d3038;
+  --mat-sys-neutral10: #1a1b1f;
+  --mat-sys-level0: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
+  --mat-sys-level1: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  --mat-sys-level2: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  --mat-sys-level3: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  --mat-sys-level4: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  --mat-sys-level5: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12);
+  --mat-sys-body-large: 400 1rem / 1.5rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-large-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-large-line-height: 1.5rem;
+  --mat-sys-body-large-size: 1rem;
+  --mat-sys-body-large-tracking: 0.031rem;
+  --mat-sys-body-large-weight: 400;
+  --mat-sys-body-medium: 400 0.875rem / 1.25rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-medium-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-medium-line-height: 1.25rem;
+  --mat-sys-body-medium-size: 0.875rem;
+  --mat-sys-body-medium-tracking: 0.016rem;
+  --mat-sys-body-medium-weight: 400;
+  --mat-sys-body-small: 400 0.75rem / 1rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-small-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-body-small-line-height: 1rem;
+  --mat-sys-body-small-size: 0.75rem;
+  --mat-sys-body-small-tracking: 0.025rem;
+  --mat-sys-body-small-weight: 400;
+  --mat-sys-display-large: 400 3.562rem / 4rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-large-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-large-line-height: 4rem;
+  --mat-sys-display-large-size: 3.562rem;
+  --mat-sys-display-large-tracking: -0.016rem;
+  --mat-sys-display-large-weight: 400;
+  --mat-sys-display-medium: 400 2.812rem / 3.25rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-medium-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-medium-line-height: 3.25rem;
+  --mat-sys-display-medium-size: 2.812rem;
+  --mat-sys-display-medium-tracking: 0;
+  --mat-sys-display-medium-weight: 400;
+  --mat-sys-display-small: 400 2.25rem / 2.75rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-small-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-display-small-line-height: 2.75rem;
+  --mat-sys-display-small-size: 2.25rem;
+  --mat-sys-display-small-tracking: 0;
+  --mat-sys-display-small-weight: 400;
+  --mat-sys-headline-large: 400 2rem / 2.5rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-large-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-large-line-height: 2.5rem;
+  --mat-sys-headline-large-size: 2rem;
+  --mat-sys-headline-large-tracking: 0;
+  --mat-sys-headline-large-weight: 400;
+  --mat-sys-headline-medium: 400 1.75rem / 2.25rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-medium-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-medium-line-height: 2.25rem;
+  --mat-sys-headline-medium-size: 1.75rem;
+  --mat-sys-headline-medium-tracking: 0;
+  --mat-sys-headline-medium-weight: 400;
+  --mat-sys-headline-small: 400 1.5rem / 2rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-small-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-headline-small-line-height: 2rem;
+  --mat-sys-headline-small-size: 1.5rem;
+  --mat-sys-headline-small-tracking: 0;
+  --mat-sys-headline-small-weight: 400;
+  --mat-sys-label-large: 500 0.875rem / 1.25rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-large-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-large-line-height: 1.25rem;
+  --mat-sys-label-large-size: 0.875rem;
+  --mat-sys-label-large-tracking: 0.006rem;
+  --mat-sys-label-large-weight: 500;
+  --mat-sys-label-large-weight-prominent: 700;
+  --mat-sys-label-medium: 500 0.75rem / 1rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-medium-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-medium-line-height: 1rem;
+  --mat-sys-label-medium-size: 0.75rem;
+  --mat-sys-label-medium-tracking: 0.031rem;
+  --mat-sys-label-medium-weight: 500;
+  --mat-sys-label-medium-weight-prominent: 700;
+  --mat-sys-label-small: 500 0.688rem / 1rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-small-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-label-small-line-height: 1rem;
+  --mat-sys-label-small-size: 0.688rem;
+  --mat-sys-label-small-tracking: 0.031rem;
+  --mat-sys-label-small-weight: 500;
+  --mat-sys-title-large: 400 1.375rem / 1.75rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-large-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-large-line-height: 1.75rem;
+  --mat-sys-title-large-size: 1.375rem;
+  --mat-sys-title-large-tracking: 0;
+  --mat-sys-title-large-weight: 400;
+  --mat-sys-title-medium: 500 1rem / 1.5rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-medium-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-medium-line-height: 1.5rem;
+  --mat-sys-title-medium-size: 1rem;
+  --mat-sys-title-medium-tracking: 0.009rem;
+  --mat-sys-title-medium-weight: 500;
+  --mat-sys-title-small: 500 0.875rem / 1.25rem system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-small-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mat-sys-title-small-line-height: 1.25rem;
+  --mat-sys-title-small-size: 0.875rem;
+  --mat-sys-title-small-tracking: 0.006rem;
+  --mat-sys-title-small-weight: 500;
+  --mat-sys-corner-extra-large: 28px;
+  --mat-sys-corner-extra-large-top: 28px 28px 0 0;
+  --mat-sys-corner-extra-small: 4px;
+  --mat-sys-corner-extra-small-top: 4px 4px 0 0;
+  --mat-sys-corner-full: 9999px;
+  --mat-sys-corner-large: 16px;
+  --mat-sys-corner-large-end: 0 16px 16px 0;
+  --mat-sys-corner-large-start: 16px 0 0 16px;
+  --mat-sys-corner-large-top: 16px 16px 0 0;
+  --mat-sys-corner-medium: 12px;
+  --mat-sys-corner-none: 0;
+  --mat-sys-corner-small: 8px;
+  --mat-sys-dragged-state-layer-opacity: 0.16;
+  --mat-sys-focus-state-layer-opacity: 0.12;
+  --mat-sys-hover-state-layer-opacity: 0.08;
+  --mat-sys-pressed-state-layer-opacity: 0.12;
+  --mat-sys-primary: var(--app-accent);
+}
 
+:root {
   --app-accent: light-dark(#2f6fdb, #5b93f0);
-  --app-on-accent: #ffffff;
-
   --app-space-1: 4px;
   --app-space-2: 8px;
   --app-space-3: 12px;
   --app-space-4: 16px;
   --app-space-5: 24px;
   --app-space-6: 32px;
-
   --app-radius-s: 6px;
   --app-radius-m: 10px;
   --app-radius-l: 16px;
-
-  --app-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --app-font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --app-font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
   --app-text-xs: 400 11.5px/1.4 var(--app-font-family);
   --app-text-sm: 400 13px/1.45 var(--app-font-family);
   --app-text-md: 400 14px/1.5 var(--app-font-family);
   --app-text-lg: 600 16px/1.4 var(--app-font-family);
   --app-text-xl: 650 20px/1.3 var(--app-font-family);
-
-  --app-bg: light-dark(#ffffff, #0d0e11);
-  --app-card: light-dark(#f4f3f6, #1a1b1f);
-  --app-ink: light-dark(#1a1b1f, #e3e2e6);
-  --app-muted: light-dark(#44474e, #e0e2ec);
-  --app-line: light-dark(#c4c6d0, #44474e);
-  --app-outline: light-dark(#74777f, #8e9099);
-  --app-bad: light-dark(#ba1a1a, #ffb4ab);
+  --app-text-2xl: 700 28px/1.2 var(--app-font-family);
+  --app-bg: var(--mat-sys-surface-container-lowest);
+  --app-card: var(--mat-sys-surface-container-low);
+  --app-ink: var(--mat-sys-on-surface);
+  --app-muted: var(--mat-sys-on-surface-variant);
+  --app-line: var(--mat-sys-outline-variant);
+  --app-ok: light-dark(#1f8a4c, #5fd08f);
+  --app-warn: light-dark(#b97a00, #e3a92b);
+  --app-bad: var(--mat-sys-error);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
   background: var(--app-bg);
   color: var(--app-ink);
   font: var(--app-text-md);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--app-font-mono);
+}
+
+.mat-mdc-tab-nav-bar:not(.mat-mdc-tab-header-pagination-controls-enabled) .mat-mdc-tab-link-container {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.mat-mdc-tab-nav-bar:not(.mat-mdc-tab-header-pagination-controls-enabled) .mat-mdc-tab-link-container::-webkit-scrollbar {
+  display: none;
+}
+
+.app-pill {
+  --pill: var(--app-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--app-space-1);
+  max-width: 100%;
+  padding: 1px var(--app-space-2);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pill) 16%, transparent);
+  color: var(--pill);
+  font: var(--app-text-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.app-pill::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.app-pill[data-tone=ok] {
+  --pill: var(--app-ok);
+}
+.app-pill[data-tone=warn] {
+  --pill: var(--app-warn);
+}
+.app-pill[data-tone=bad] {
+  --pill: var(--app-bad);
+}
+
+.app-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--app-space-3);
+}
+@media (max-width: 600px) {
+  .app-tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.app-tile {
+  --tile: var(--app-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--app-space-3) var(--app-space-4);
+  border: 1px solid var(--app-line);
+  border-radius: var(--app-radius-m);
+  background: var(--app-card);
+}
+.app-tile .label {
+  color: var(--app-muted);
+  font: var(--app-text-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-tile .value {
+  color: var(--tile);
+  font: var(--app-text-2xl);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-tile .value small {
+  margin-left: var(--app-space-1);
+  color: var(--app-muted);
+  font: var(--app-text-sm);
+}
+.app-tile .hint {
+  color: var(--app-muted);
+  font: var(--app-text-xs);
+}
+.app-tile .spark,
+.app-tile [spark] {
+  display: block;
+  height: 32px;
+  margin-top: var(--app-space-1);
+}
+.app-tile[data-tone=ok] {
+  --tile: var(--app-ok);
+}
+.app-tile[data-tone=warn] {
+  --tile: var(--app-warn);
+}
+.app-tile[data-tone=bad] {
+  --tile: var(--app-bad);
+}
+
+.app-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--app-space-2);
+  padding: var(--app-space-5);
+  color: var(--app-muted);
+  font: var(--app-text-md);
+  text-align: center;
+}
+.app-empty p {
+  margin: 0;
+}
+.app-empty .icon {
+  font-family: "Material Symbols Outlined";
+  font-size: 40px;
+  line-height: 1;
+  font-feature-settings: "liga";
+  opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+  table.app-stack-table {
+    display: block;
+    width: 100%;
+    background: none;
+  }
+  table.app-stack-table thead {
+    display: none;
+  }
+  table.app-stack-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--app-space-2);
+  }
+  table.app-stack-table tr {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: var(--app-space-2) var(--app-space-3);
+    border: 1px solid var(--app-line);
+    border-radius: var(--app-radius-m);
+    background: var(--app-card);
+  }
+  table.app-stack-table td,
+  table.app-stack-table td:first-of-type,
+  table.app-stack-table td:last-of-type {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--app-space-3);
+    min-height: 0;
+    padding: var(--app-space-1) 0;
+    border: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  table.app-stack-table td::before,
+  table.app-stack-table td:first-of-type::before,
+  table.app-stack-table td:last-of-type::before {
+    content: attr(data-label);
+    flex: none;
+    max-width: 45%;
+    color: var(--app-muted);
+    font: var(--app-text-sm);
+    text-align: left;
+  }
+  table.app-stack-table td[data-label=""]::before,
+  table.app-stack-table td:first-of-type[data-label=""]::before,
+  table.app-stack-table td:last-of-type[data-label=""]::before {
+    display: none;
+  }
+  table.app-stack-table td[data-label=""],
+  table.app-stack-table td:first-of-type[data-label=""],
+  table.app-stack-table td:last-of-type[data-label=""] {
+    justify-content: flex-end;
+  }
 }
